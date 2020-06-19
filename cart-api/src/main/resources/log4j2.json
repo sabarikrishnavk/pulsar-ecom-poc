@@ -1,0 +1,33 @@
+{
+	"configuration": {
+		"appenders": {
+			"Console": {
+				"name": "stdout",
+				"JSONLayout": {
+					"compact": "true",
+					"eventEol": "true",
+					"properties": "true",
+					"objectMessageAsJsonObject": "true"
+				}
+			}
+		},
+		"loggers": {
+			"root": {
+				"level": "INFO",
+				"AppenderRef": {
+					"ref": "stdout"
+				}
+			},
+			"logger": [
+				{
+					"name": "org.springframework",
+					"level": "INFO"
+				},
+				{
+					"name": "com.dsg",
+					"level": "DEBUG"
+				}
+			]
+		}
+	}
+}

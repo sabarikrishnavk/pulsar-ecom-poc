@@ -1,0 +1,37 @@
+info:
+  component: cart-stream
+server:
+  port: 4002
+  max-http-header-size: 20000
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 1024
+
+spring:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/testdb
+      username: testuser
+      password: password
+    jpa:
+      hibernate:
+        ddl-auto: update
+      show-sql: true
+      database: postgresql
+
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    distribution:
+      percentiles:
+        http.server.requests: 0.5, 0.75, 0.95, 0.98, 1.0
+        #This is the new line, add a quantile for each bucket you want to track.
+        method.requests:  0.5, 0.75, 0.95, 0.98, 1.0
+    tags:
+      application: ${spring.application.name}      

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: ecom-calculator-api
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
