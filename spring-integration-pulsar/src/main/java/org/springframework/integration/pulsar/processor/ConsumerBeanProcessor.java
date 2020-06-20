@@ -1,8 +1,9 @@
-package org.springframework.integration.pulsar.collector;
+package org.springframework.integration.pulsar.processor;
 
 import org.springframework.integration.pulsar.annotation.PulsarConsumer;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.pulsar.bean.ConsumerBean;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -11,9 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Configuration
-public class ConsumerCollector implements BeanPostProcessor {
+public class ConsumerBeanProcessor implements BeanPostProcessor {
 
-    private Map<String, ConsumerHolder> consumers = new ConcurrentHashMap<>();
+    private Map<String, ConsumerBean> consumers = new ConcurrentHashMap<>();
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
@@ -23,21 +24,20 @@ public class ConsumerCollector implements BeanPostProcessor {
             .filter($ -> $.isAnnotationPresent(PulsarConsumer.class))
             .collect(Collectors.toMap(
                 method -> beanClass.getName() + "#" + method.getName(),
-                method -> new ConsumerHolder(method.getAnnotation(PulsarConsumer.class), method, bean))));
+                method -> new ConsumerBean(method.getAnnotation(PulsarConsumer.class), method, bean))));
         return bean;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
-
         return bean;
     }
 
-    public Map<String, ConsumerHolder> getConsumers() {
+    public Map<String, ConsumerBean> getConsumers() {
         return consumers;
     }
 
-    public Optional<ConsumerHolder> getConsumer(String methodDescriptor) {
+    public Optional<ConsumerBean> getConsumer(String methodDescriptor) {
         return Optional.ofNullable(consumers.get(methodDescriptor));
     }
 }

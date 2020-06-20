@@ -9,10 +9,9 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.integration.pulsar.annotation.PulsarConsumer;
-import org.springframework.integration.pulsar.constant.Serialization;
-import org.springframework.integration.pulsar.producer.PulsarTemplate;
+import org.springframework.integration.pulsar.bean.PulsarSchemaType;
+import org.springframework.integration.pulsar.config.PulsarTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -30,14 +29,14 @@ public class AddressService {
     @Autowired
     CalculationService  calculateService;
 
-    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ADDRESS_ADD, clazz= CartAddress.class, serialization = Serialization.JSON, type = SubscriptionType.Exclusive)
+    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ADDRESS_ADD, clazz= CartAddress.class, type = SubscriptionType.Exclusive)
     public void addItem(CartAddress address) {
         log.info("Stream : cart-address-add : " +address.toString());
         processAddress(address);
     }
 
 
-    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ADDRESS_UPDATE, clazz= CartAddress.class, serialization = Serialization.JSON, type = SubscriptionType.Exclusive)
+    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ADDRESS_UPDATE, clazz= CartAddress.class, type = SubscriptionType.Exclusive)
     public void updateItem(CartAddress address) {
         log.info("Stream : cart-address-update : " +address.toString());
         processAddress(address);
@@ -72,7 +71,7 @@ public class AddressService {
     }
 
 
-    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ADDRESS_DELETE, clazz= CartAddress.class, serialization = Serialization.JSON, type = SubscriptionType.Exclusive)
+    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ADDRESS_DELETE, clazz= CartAddress.class, type = SubscriptionType.Exclusive)
     public void deleteItem(CartAddress address) {
         log.info("Stream : cart-address-delete : " +address.toString());
     }
