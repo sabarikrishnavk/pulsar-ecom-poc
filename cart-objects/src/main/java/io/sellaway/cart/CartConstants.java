@@ -19,4 +19,8 @@ public interface CartConstants {
     String TOPIC_CART_CONTACT_ADD       = "cart-contact-add";
     String TOPIC_CART_CONTACT_UPDATE    = "cart-contact-update";
     String TOPIC_CART_CONTACT_DELETE    = "cart-contact-delete";
+
+    String TOPIC_CART_PAYMENT_ADD          = "cart-payment-add";
+    String TOPIC_CART_PAYMENT_UPDATE       = "cart-payment-update";
+    String TOPIC_CART_PAYMENT_DELETE       = "cart-payment-delete";
 }

@@ -44,6 +44,9 @@ public class CartDBService {
         if(cart.getLineItems() == null){
             cart.setLineItems(new ArrayList<>());
         }
+        if(cart.getPayments() == null){
+            cart.setPayments(new ArrayList<>());
+        }
         return cart;
     }
 }

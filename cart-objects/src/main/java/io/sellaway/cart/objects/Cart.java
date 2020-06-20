@@ -19,7 +19,7 @@ public class Cart implements Serializable {
     String orderId;
     String userId;
     List<CartLineItem> lineItems;
-    List<PaymentTenders> payments;
+    List<CartPayment> payments;
     CartContact contact;
     CartAddress shipAddress;
     CartAddress billAddress;

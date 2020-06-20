@@ -6,6 +6,7 @@ import FindOrder from './components/FindOrder/FindOrder';
 import ManageCart from './components/ManageCart/ManageCart';
 import ManageContact from './components/ManageContact/ManageContact';
 import ManageAddress from './components/ManageAddress/ManageAddress';
+import ManagePayment from './components/ManagePayment/ManagePayment';
 
 
 
@@ -51,6 +52,8 @@ const App = () => {
             <ManageContact orderId ={orderId}/>
             <br/>
             <ManageAddress orderId = {orderId} />
+            <br/>
+            <ManagePayment orderId = {orderId} />
             <br/>
             <OrderSummary orderSummary={orderSummary} /> 
 

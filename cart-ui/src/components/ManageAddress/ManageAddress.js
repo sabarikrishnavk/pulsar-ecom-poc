@@ -20,7 +20,7 @@ const ManageAddress = ({ orderId }) => {
     let onStateChange =(e)=>{ setStateName(e.target.value);  }
     let onAddressTypeChange =(e)=>{ setAddressType(e.target.value);  }
 
-    let manageItem=() => {
+    let manageAddress=() => {
         let msg = {
             
             orderId: orderId,
@@ -80,7 +80,7 @@ const ManageAddress = ({ orderId }) => {
                 style={{ height: "30px", width: "80%" }}
             />
 
-            <Button variant="contained" color="primary" onClick={manageItem}>
+            <Button variant="contained" color="primary" onClick={manageAddress}>
                 Add Address
             </Button>
         </div>
