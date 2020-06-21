@@ -2,8 +2,8 @@ package io.sellaway.cart.service;
 
 import io.sellaway.cart.CartConstants;
 import io.sellaway.cart.objects.Cart;
-import io.sellaway.cart.objects.CartContact;
 import io.sellaway.cart.entity.CartDBService;
+import io.sellaway.cart.objects.CartContact;
 import org.springframework.integration.pulsar.annotation.PulsarConsumer;
 import org.springframework.integration.pulsar.bean.PulsarSchemaType;
 import org.springframework.integration.pulsar.config.PulsarTemplate;
@@ -26,21 +26,21 @@ public class ContactService {
     @Autowired
     CalculationService  calculateService;
 
-    @PulsarConsumer(topic=CartConstants.TOPIC_CART_CONTACT_ADD, clazz= CartContact.class, type = SubscriptionType.Exclusive)
+    @PulsarConsumer(topic=CartConstants.TOPIC_CART_CONTACT_ADD, clazz= CartContact.class, schemaType = PulsarSchemaType.AVRO, type = SubscriptionType.Exclusive)
     public void addItem(CartContact contact) {
         log.info("Stream : cart-contact-add : " +contact.toString());
         processContact(contact);
     }
 
 
-    @PulsarConsumer(topic=CartConstants.TOPIC_CART_CONTACT_UPDATE, clazz= CartContact.class, type = SubscriptionType.Exclusive)
+    @PulsarConsumer(topic=CartConstants.TOPIC_CART_CONTACT_UPDATE, clazz= CartContact.class, schemaType = PulsarSchemaType.AVRO, type = SubscriptionType.Exclusive)
     public void updateItem(CartContact contact) {
         log.info("Stream : cart-contact-update : " +contact.toString());
         processContact(contact);
     }
 
     private void processContact(CartContact contact) {
-        Cart cart = cartDBService.findCart( contact.getOrderId() );
+        Cart cart = cartDBService.findCart( contact.getOrderId().toString() );
         cart.setContact(contact);
         cartDBService.persistCart(cart);
         try {
@@ -51,7 +51,7 @@ public class ContactService {
     }
 
 
-    @PulsarConsumer(topic=CartConstants.TOPIC_CART_CONTACT_DELETE, clazz= CartContact.class, type = SubscriptionType.Exclusive)
+    @PulsarConsumer(topic=CartConstants.TOPIC_CART_CONTACT_DELETE, clazz= CartContact.class, schemaType = PulsarSchemaType.AVRO, type = SubscriptionType.Exclusive)
     public void deleteItem(CartContact contact) {
         log.info("Stream : cart-contact-delete : " +contact.toString());
     }

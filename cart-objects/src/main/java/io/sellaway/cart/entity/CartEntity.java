@@ -1,7 +1,6 @@
 package io.sellaway.cart.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import io.sellaway.cart.objects.Cart;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +27,7 @@ public class CartEntity {
 
     @Type(type="jsonb")
     @Column(name="cart", columnDefinition="jsonb")
-    private Cart cart;
+    private byte[] cart;
 
 
 }

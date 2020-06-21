@@ -4,6 +4,7 @@ import io.sellaway.cart.CartConstants;
 import io.sellaway.cart.entity.CartDBService;
 import io.sellaway.cart.objects.Cart;
 import io.sellaway.cart.objects.CartPayment;
+import io.sellaway.cart.objects.CartStatusType;
 import lombok.extern.log4j.Log4j2;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.SubscriptionType;
@@ -42,7 +43,7 @@ public class PaymentService {
     }
 
     private void processPayment(CartPayment payment) {
-        Cart cart = cartDBService.findCart( payment.getOrderId() );
+        Cart cart = cartDBService.findCart( payment.getOrderId().toString() );
 
         cart.getPayments().add(payment);
 

@@ -2,7 +2,8 @@ package io.sellaway.cart.service;
 
 import io.sellaway.cart.CartConstants;
 import io.sellaway.cart.objects.Cart;
-import io.sellaway.cart.objects.CartLineItem;
+import io.sellaway.cart.objects.CartStatusType;
+import io.sellaway.cart.objects.LineItem;
 import io.sellaway.cart.entity.CartDBService;
 import org.springframework.integration.pulsar.annotation.PulsarConsumer;
 import org.springframework.integration.pulsar.bean.PulsarSchemaType;
@@ -28,29 +29,29 @@ public class ItemService {
     @Autowired
     CalculationService  calculateService;
 
-    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ITEM_ADD, clazz= CartLineItem.class,  type = SubscriptionType.Exclusive)
-    public void addItem(CartLineItem item) {
+    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ITEM_ADD, clazz= LineItem.class, schemaType = PulsarSchemaType.AVRO , type = SubscriptionType.Exclusive)
+    public void addItem(LineItem item) {
         log.info("Stream : cart-item-add : " +item.toString());
         processItem(item);
     }
 
 
-    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ITEM_UPDATE, clazz= CartLineItem.class, type = SubscriptionType.Exclusive)
-    public void updateItem(CartLineItem item) {
+    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ITEM_UPDATE, clazz= LineItem.class, schemaType = PulsarSchemaType.AVRO ,type = SubscriptionType.Exclusive)
+    public void updateItem(LineItem item) {
         log.info("Stream : cart-item-update : " +item.toString());
 
         processItem(item);
     }
 
-    private void processItem(CartLineItem item) {
-        Cart cart = cartDBService.findCart( item.getOrderId() );
+    private void processItem(LineItem item) {
+        Cart cart = cartDBService.findCart( item.getOrderId().toString() );
 
         if(item.getLineNumber() == null){
-            item.setLineNumber(item.getSku()+"-"+item.getShippingMethod());
+            item.setLineNumber(cart.getOrderId()+""+item.getSku()+item.getShippingMethod());
         }
 
-        Optional<CartLineItem> existingItem = cart.getLineItems().stream().filter(itemDB ->{
-            return item.getLineNumber().equalsIgnoreCase(itemDB.getLineNumber());
+        Optional<LineItem> existingItem = cart.getLineItems().stream().filter(itemDB ->{
+            return itemDB !=null && item.getLineNumber()==(itemDB.getLineNumber());
         } ).findAny();
 
         if(!existingItem.isEmpty()){
@@ -70,8 +71,8 @@ public class ItemService {
     }
 
 
-    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ITEM_DELETE, clazz= CartLineItem.class,   type = SubscriptionType.Exclusive)
-    public void deleteItem(CartLineItem msg) {
+    @PulsarConsumer(topic=CartConstants.TOPIC_CART_ITEM_DELETE, clazz= LineItem.class,  schemaType = PulsarSchemaType.AVRO , type = SubscriptionType.Exclusive)
+    public void deleteItem(LineItem msg) {
         log.info("Stream : cart-item-delete : " +msg.toString());
     }
 

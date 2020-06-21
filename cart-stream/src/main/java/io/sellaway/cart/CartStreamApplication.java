@@ -16,6 +16,6 @@ public class CartStreamApplication {
 	@Bean
 	public ProducerTopicRegistry producerFactory() {
 		return new ProducerTopicRegistry()
-				.registerTopic(CartConstants.WEBHOOK_TOPIC_CART_SUMMARY, CartSummary.class, PulsarSchemaType.JSON) ;
+				.registerTopic(CartConstants.WEBHOOK_TOPIC_CART_SUMMARY, CartSummary.class, PulsarSchemaType.AVRO) ;
 	}
 }

@@ -1,0 +1,91 @@
+[
+    {
+        "type": "record",
+        "namespace": "io.sellaway.cart.objects",
+        "name": "LineItem",
+        "fields": [
+            { "name": "orderId","doc": "Order Identifier","type":"string", "default":"" },
+            { "name": "lineNumber", "type": ["null","string"], "doc": "lineNumber", "default":null },
+            { "name": "sku", "type": "string" , "doc": "SKU " , "default":"" },
+            { "name": "fulfillZipCode", "type": ["null","string"], "doc": "Fufilling Zipcode "  , "default": null},
+            { "name": "shippingMethod", "type": {"name": "ShippingMethodType","type": "enum","symbols": ["bopis","standard","twoday","nextday"]}  },
+            { "name": "originalPrice", "type": "double" , "doc": "original Price  ", "default":"0.0"},
+            { "name": "discount", "type": "double" , "doc": "Discount  ", "default":"0.0"},
+            { "name": "sellingPrice", "type": "double" , "doc": "sellingPrice = originalPrice - discount ", "default":"0.0"},
+            { "name": "price", "type": "double" , "doc": "price = sellingPrice * qty ", "default":"0.0"},
+            { "name": "quantity", "type": "double" , "doc": "quantity purchased ", "default":"0.0"},
+            { "name": "lineItemProperties", "type": ["null",{"type" : "map","values" : "string"} ] , "doc": "Line Item properties :key value "}
+        ]
+    },
+    {
+        "type": "record",
+        "namespace": "io.sellaway.cart.objects",
+        "name": "CartSummary",
+        "fields": [
+            { "name": "orderId","doc": "Order Identifier","type":"string", "default":"" },
+            { "name": "discount", "type": "double" , "doc": "total Discount  "},
+            { "name": "price", "type": "double" , "doc": "total sku price "},
+            { "name": "shipping", "type": "double" , "doc": "total shipping charge "},
+            { "name": "quantity", "type": "double" , "doc": "total quantity purchased "},
+            { "name": "lines", "type": "int" , "doc": "total line items purchased "}
+         ]
+    },
+    {
+        "type": "record",
+        "namespace": "io.sellaway.cart.objects",
+        "name": "CartContact",
+        "fields": [
+            { "name": "orderId","doc": "Order Identifier","type":"string", "default":""},
+            { "name": "firstName", "type": "string", "doc": "Customer's first name"},
+            { "name": "lastName", "type": "string","doc": "Customer's last name" },
+            { "name": "email",  "type": ["null","string"] , "doc": "Customer Email Addresses"},
+            { "name": "phone",  "type": ["null","string"], "doc": "Customer phone"}
+        ]
+    },
+    {
+        "type": "record",
+        "namespace": "io.sellaway.cart.objects",
+        "name": "CartAddress",
+        "fields": [
+            { "name": "orderId","doc": "Order Identifier","type":"string", "default":"" },
+            { "name": "address", "type": "string", "doc": "Address Line 1" },
+            { "name": "city", "type": "string" },
+            { "name": "state", "type": "string" },
+            { "name": "zipcode", "type": "string" },
+            { "name": "addressType", "type": {"name": "AddressType","type": "enum","symbols": ["shipping","billing","shippingbilling"]} }
+        ]
+    },
+
+    {
+        "type": "record",
+        "namespace": "io.sellaway.cart.objects",
+        "name": "CartPayment",
+        "fields": [
+            { "name": "orderId","doc": "Order Identifier","type":"string", "default":""},
+            { "name": "paymentReference", "type": "string", "doc": "Payment reference"},
+            { "name": "paymentType",  "type": {"name": "PaymentType","type": "enum","symbols": ["Visa","MasterCard","Discover","Amex","Giftcard"]} },
+            { "name": "walletType",  "type": {"name": "WalletType","type": "enum","symbols": ["ApplePay","Paypal"]} },
+            { "name": "amount", "type": "double" , "doc": "amount charged on payment "},
+            { "name": "paymentProperties", "type": ["null",{"type" : "map","values" : "string"} ] , "doc": "Payment properties properties :key value "}
+
+        ]
+    },
+    {
+        "type": "record",
+        "name": "Cart",
+        "namespace": "io.sellaway.cart.objects",
+        "doc": "Avro Schema for Order Records",
+        "fields": [
+            {"name": "orderId","doc": "Order Identifier","type":"string", "default":""},
+            {"name": "contact","doc": "Customer Details","type":["null", "io.sellaway.cart.objects.CartContact" ] ,"default":null },
+            {"name": "summary","doc": "Cart summary Details","type":["null","io.sellaway.cart.objects.CartSummary" ],"default":null},
+            {"name": "shipAddress","doc": "Order shipping Details","type":["null","io.sellaway.cart.objects.CartAddress" ],"default":null},
+            {"name": "billAddress","doc": "Order billing Details","type":["null","io.sellaway.cart.objects.CartAddress" ],"default":null},
+            {"name": "lineItems","doc": "Line items" ,"type":["null", {"type": "array" , "items" :"io.sellaway.cart.objects.LineItem" } ] ,"default":null},
+            {"name": "payments","doc": "Payments " ,"type": ["null",{"type": "array" , "items" :"io.sellaway.cart.objects.CartPayment" } ],"default":null},
+            {"name": "timePlaced","doc": " Time Order Was Placed", "type": ["null","string"], "default":null},
+            {"name": "lastUpdated","doc": "Last Updated Time", "type": ["null","string"], "default": null},
+            {"name": "status","doc": "Cart status","type":{"name": "CartStatusType","type":"enum","symbols":["placed","in_progress","abandoned"]}, "default":""}
+        ]
+    }
+]

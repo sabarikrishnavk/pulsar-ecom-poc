@@ -5,6 +5,7 @@ import io.sellaway.cart.objects.AddressType;
 import io.sellaway.cart.objects.Cart;
 import io.sellaway.cart.objects.CartAddress;
 import io.sellaway.cart.entity.CartDBService;
+import io.sellaway.cart.objects.ShippingMethodType;
 import lombok.extern.log4j.Log4j2;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.SubscriptionType;
@@ -43,19 +44,18 @@ public class AddressService {
     }
 
     private void processAddress(CartAddress address) {
-        Cart cart = cartDBService.findCart( address.getOrderId() );
-        address.setAddressId(UUID.randomUUID().toString());
+        Cart cart = cartDBService.findCart( address.getOrderId().toString() );
 
-        if(AddressType.SHIPPING == address.getAddressType() || AddressType.SHIPPINGANDBILLING == address.getAddressType() ) {
+        if(AddressType.shipping == address.getAddressType() || AddressType.shippingbilling == address.getAddressType() ) {
             cart.getLineItems().stream().forEach(cartLineItem -> {
-                if(!"BOPIS".equalsIgnoreCase(cartLineItem.getShippingMethod())){
-                    cartLineItem.setAddressId(address.getAddressId());
-                    cartLineItem.setZipCode(address.getZipCode());
+                if(ShippingMethodType.bopis != cartLineItem.getShippingMethod()){
+//                    cartLineItem.setAddressId(address.getAddressId());
+//                    cartLineItem.setZipCode(address.getZipCode());
                 }
             });
             cart.setShipAddress(address);
         }
-        if(AddressType.BILLING == address.getAddressType() || AddressType.SHIPPINGANDBILLING == address.getAddressType() ) {
+        if(AddressType.billing == address.getAddressType() || AddressType.shippingbilling == address.getAddressType() ) {
             cart.setBillAddress(address);
         }
 

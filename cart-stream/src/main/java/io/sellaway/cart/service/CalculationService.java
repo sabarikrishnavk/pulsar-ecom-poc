@@ -1,8 +1,9 @@
 package io.sellaway.cart.service;
 
 import io.sellaway.cart.objects.Cart;
-import io.sellaway.cart.objects.CartLineItem;
+import io.sellaway.cart.objects.LineItem;
 import io.sellaway.cart.objects.CartSummary;
+import io.sellaway.cart.objects.ShippingMethodType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +18,15 @@ public class CalculationService {
         CartSummary summary = new CartSummary();
         summary.setOrderId(cart.getOrderId());
         if(cart.getLineItems()!=null){
-            summary.setSize(cart.getLineItems().size());
-            summary.setTotalQty(cart.getLineItems().stream().mapToInt(CartLineItem::getQuantity).sum());
+            summary.setLines(cart.getLineItems().size());
+            summary.setQuantity(cart.getLineItems().stream().mapToDouble(LineItem::getQuantity).sum());
         }
 
         Stream<String> shippingZipCodes = cart.getLineItems().stream().filter(cartLineItem->{
-            return !"BOPIS".equalsIgnoreCase(cartLineItem.getShippingMethod()) && cartLineItem.getZipCode() !=null ;
-        }).map(CartLineItem::getZipCode).distinct();
+            return ShippingMethodType.bopis == cartLineItem.getShippingMethod() && cartLineItem.getFulfillZipCode() !=null ;
+        }).map(lineItem -> {
+            return lineItem.getFulfillZipCode().toString();
+        }).distinct();
 
         int count = (int) shippingZipCodes.count();
         if(count > 0){

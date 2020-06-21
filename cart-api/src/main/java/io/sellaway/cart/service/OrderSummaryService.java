@@ -17,7 +17,7 @@ public class OrderSummaryService {
     SimpMessagingTemplate template;
 
     @PulsarConsumer(topic = CartConstants.WEBHOOK_TOPIC_CART_SUMMARY,
-            clazz = CartSummary.class, schemaType = PulsarSchemaType.JSON,
+            clazz = CartSummary.class, schemaType = PulsarSchemaType.AVRO,
             type = SubscriptionType.Exclusive)
     public void orderSummary(CartSummary cartSummary) {
         log.info("Webhook : cart-summary : " +cartSummary.toString());
