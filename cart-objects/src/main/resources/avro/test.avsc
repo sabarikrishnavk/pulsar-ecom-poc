@@ -1,0 +1,10 @@
+[
+{
+    "type": "record",
+    "name": "Test",
+    "fields": [
+        { "name": "id","type":["null","int"]  },
+        { "name": "name", "type": ["null","string"] }
+     ]
+}
+]

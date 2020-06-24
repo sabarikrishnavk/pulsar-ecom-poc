@@ -8,9 +8,11 @@ const OrderSummary = ({ orderSummary }) => {
             <ul className="messages-list">
                 Order Id : {orderSummary.orderId} 
                 <br></br>
-                Number of items : {orderSummary.size}
+                Number of items : {orderSummary.lines}
                 <br></br>
-                Total Quantity : {orderSummary.totalQty}
+                Total Quantity : {orderSummary.quantity}
+                <br></br>
+                Shipping  Charge: {orderSummary.shipping}
                 <br></br>
                 Shipping  Charge: {orderSummary.shipping}
                 

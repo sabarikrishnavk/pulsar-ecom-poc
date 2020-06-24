@@ -2,21 +2,12 @@ package io.sellaway.cart.entity;
 
 import io.sellaway.cart.objects.Cart;
 import io.sellaway.cart.objects.CartStatusType;
-import io.sellaway.cart.util.AvroUtil;
+import org.springframework.integration.pulsar.util.AvroUtil;
 import lombok.extern.log4j.Log4j2;
-import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.io.*;
-import org.apache.avro.specific.SpecificDatumReader;
-import org.apache.avro.specific.SpecificDatumWriter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Log4j2
@@ -26,15 +17,15 @@ public class CartDBService {
     @Autowired
     public CartRepository repository;
 
-    @Autowired
-    public AvroUtil avroUtil;
-
-
     public void persistCart(Cart cart) {
         log.info("persisting cart to db");
         CartEntity cartEntity = new CartEntity();
         cartEntity.setCartId(cart.getOrderId().toString());
-        cartEntity.setCart(avroUtil.serializeBinary(cart));
+        try {
+            cartEntity.setCart(AvroUtil.serializeBinary(cart,Cart.getClassSchema()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         repository.save(cartEntity);
     }
 
@@ -44,9 +35,11 @@ public class CartDBService {
         Cart cart = null;
 
         if(!entity.isEmpty()){
-
-          cart= avroUtil.deSerializeBinary(entity.get().getCart());
-
+            try {
+                cart= AvroUtil.deSerializeBinary(entity.get().getCart(),Cart.getClassSchema());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         if(cart ==null){

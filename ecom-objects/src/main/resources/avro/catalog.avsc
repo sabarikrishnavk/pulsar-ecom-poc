@@ -1,0 +1,13 @@
+[
+    {
+        "type": "record",
+        "namespace": "io.sellaway.ecom.objects",
+        "name": "Product",
+        "fields": [
+            { "name": "sku","doc": "SKU","type":"string", "default":"" },
+            { "name": "name","doc": "Name","type":"string", "default":"" },
+            { "name": "description","doc": "Description","type":"string", "default":"" },
+            { "name": "price", "type": "double" , "doc": "sku price "}
+        ]
+    }
+]
